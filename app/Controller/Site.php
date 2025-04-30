@@ -2,9 +2,10 @@
 
 namespace Controller;
 
-use Src\View;
 use Model\Post;
-use Illuminate\Database\Capsule\Manager as DB;
+use Src\View;
+use Model\User;
+
 class Site
 {
     public function index(): string
@@ -12,8 +13,17 @@ class Site
         $posts = Post::all();
         return (new View())->render('site.post', ['posts' => $posts]);
     }
+
     public function hello(): string
     {
         return new View('site.hello', ['message' => 'hello working']);
+    }
+
+    public function signup(Request $request): string
+    {
+        if ($request->method==='POST' && User::create($request->all())){
+            return new View('site.signup', ['message'=>'Вы успешно зарегистрированы']);
+        }
+        return new View('site.signup');
     }
 }
